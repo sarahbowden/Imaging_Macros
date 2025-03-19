@@ -1,2 +1,12 @@
 # Imaging_Macros
 Macros for processing images in FIJI
+
+
+Macros can be used to rapidly quantify large sets of WMISH data (Process > Batch > Macro) or individual images (Plugins > Macros > Run...).
+
+
+**Important**
+- I always create a Results folder for each batch processing analysis, and then I check that the black mask covers the stained regions.
+- *Convert to Mask* is a binary process and black is selected as the smallest coverage. If images have more staining than background, this may be flipped.
+- If this is the case I either manually perform these steps to ensure the correct region is covered (you can use Image > Adjust > Threshold..., or invert the ROI).
+- In theory, if the whole batch needs to be inverted, you can add an inversion line to the macro prior to Convert to Mask.
