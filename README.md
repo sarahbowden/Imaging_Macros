@@ -9,6 +9,10 @@ Macros for processing images in FIJI
 - or individual images (Plugins > Macros > Run...)
 - Copy from the results table "% Area" (ISHquantification_Area) or "Count" (ISHquantification_Count) to quantify
 
+### ROI region selected in ~st. 32 embryos:
+
+
+
 ### **Important note**
 - I always create a Results folder for each batch processing analysis, and then I check that the black mask covers the stained regions.
 - Convert to Mask is a binary process and black is selected as the smallest coverage. If images have more staining than background, this may be flipped.
