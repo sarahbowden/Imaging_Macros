@@ -47,12 +47,12 @@ The structure of these files must be as follows:
 | A         | 17.694 | 249   |
 | B         | 21.359 | 252   |
 | B         | 20.399 | 229   |
-| Control   | 22.337 | 315   |
+| UC   | 22.337 | 315   |
 | Control   | 25.744 | 249   |
-
-
+\\
+Controls should be labelled as UC. Morpholino conditions should be labelled with "MO" at the end of the name. Rescue conditions should be labelled with "Rescue" at the end of the name.
 ## Usage
-This script runs a folder containing .csv files through an R script and spits out ggplot files with calculated p values (t test). You must define arguments in the following order:
+This script runs a folder containing .csv files through an R script and spits out ggplot files with calculated p values (wilcoxon rank sum test) for comparisons to the control (black) and comparisons of the morphant to the rescue (red). You must define arguments in the following order:
 ```bash
 ./run_quantification.sh [first argument: input directory] [second argument: output directory]
 ```

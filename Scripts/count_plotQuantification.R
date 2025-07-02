@@ -1,7 +1,7 @@
 #!/usr/local/bin/Rscript
 
 # ------------------------------------------------------------------------------
-# plotQuantification.R
+# count_plotQuantification.R
 # Batch script to create annotated boxplots from CSVs
 # Export as TIFF and PDF
 # ------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ create_plot <- function(data, file_name, plot_data, group_var, value_var) {
     scale_color_identity() +
     scale_y_continuous(limits = c(0, 100)) +
     labs(
-      title = paste(str_remove(basename(file_name), "\\.csv$"), "Area"),
+      title = paste(str_remove(basename(file_name), "\\.csv$"), "Count"),
       x = group_var,
       y = value_var
     ) +
@@ -63,7 +63,7 @@ for (file in csv_files) {
   data <- read_csv(file)
 
   group_var <- names(data)[1]
-  value_var <- names(data)[2]
+  value_var <- names(data)[3]
 
   # Print data point counts per condition
   cat("Data counts for file:", basename(file), "\n")
