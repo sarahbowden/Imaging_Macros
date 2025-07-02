@@ -50,13 +50,12 @@ The structure of these files must be as follows:
 | UC        | 22.337 | 315   |
 | UC        | 25.744 | 249   |
 
-Controls should be labelled as UC. Morpholino conditions should be labelled with "MO" at the end of the name. Rescue conditions should be labelled with "Rescue" at the end of the name.
+Controls should be labelled as "UC". Morpholino conditions should be labelled with "MO" at the end of the name. Rescue conditions should be labelled with "Rescue" at the end of the name.
 ## Usage
 This script runs a folder containing .csv files through an R script and spits out ggplot files with calculated p values (wilcoxon rank sum test) for comparisons to the control (black) and comparisons of the morphant to the rescue (red). You must define arguments in the following order:
 ```bash
 ./run_quantification.sh [first argument: input directory] [second argument: output directory]
 ```
+Currently, this code provides the ggplot file as both a .pdf and a .tif. The code also reports the number of samples in each condition.
 ###
-As a general rule, ISH quantification is best used for calculating the percentage of the ROI which is stained. However, in some circumstances, calculating the number of cells stained in an ROI can be a useful metric of quantification (e.g. more cells are specified, but these cells are smaller). In these instances, you can use the count_run_quantification.sh file to plot data generated from the count rather than Area. 
-
-(This can be repurposed for any other measure, it simply takes data from the third column rather than second.)
+As a general rule, ISH quantification is best used for calculating the percentage of the ROI which is stained. However, in some circumstances, calculating the number of cells stained in an ROI can be a useful metric of quantification (e.g. more cells are specified, but these cells are smaller). In these instances, you can use the count_run_quantification.sh file to plot data generated from the count rather than Area. (This can be repurposed for any other measure, it simply takes data from the third column rather than second and relabels graphs as "Count".)
