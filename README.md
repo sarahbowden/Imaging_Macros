@@ -33,7 +33,7 @@ _Above: Region of interest selected for this analysis in each stage 32 embryo._
 # 2. Quantification script
 
 ## Getting started
-Copy the following code to install the dependencies for R:
+Run the following line to install the dependencies for R:
 ```R
 install.packages(c("ggplot2", "dplyr", "readr", "stringr", "rlang"))
 ```
