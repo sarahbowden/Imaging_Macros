@@ -62,8 +62,9 @@ create_plot <- function(data, file_name, plot_data, group_var, value_var) {
 for (file in csv_files) {
   data <- read_csv(file)
 
+
   group_var <- names(data)[1]
-  value_var <- names(data)[2]
+  value_var <- names(data)[4]
 
   # Print data point counts per condition
   cat("Data counts for file:", basename(file), "\n")

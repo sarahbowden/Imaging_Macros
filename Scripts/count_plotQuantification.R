@@ -2,7 +2,7 @@
 
 # ------------------------------------------------------------------------------
 # count_plotQuantification.R
-# Batch script to create annotated boxplots from CSVs
+# Batch script to create annotated boxplots from CSVs - COUNT EDITION
 # Export as TIFF and PDF
 # ------------------------------------------------------------------------------
 
@@ -26,8 +26,8 @@ if (!dir.exists(output_folder)) {
   dir.create(output_folder, recursive = TRUE)
 }
 
-# --- Plotting function ---
-create_plot <- function(data, file_name, plot_data, group_var, value_var) {
+# --- Plotting function (now takes y_upper) ---
+create_plot <- function(data, file_name, plot_data, group_var, value_var, y_upper) {
   data[[group_var]] <- factor(data[[group_var]], levels = unique(data[[group_var]]))
 
   ggplot(data, aes(x = .data[[group_var]], y = .data[[value_var]])) +
@@ -40,7 +40,8 @@ create_plot <- function(data, file_name, plot_data, group_var, value_var) {
       size = 4
     ) +
     scale_color_identity() +
-    scale_y_continuous(limits = c(0, 100)) +
+    # Dynamic y-axis with a touch of headroom
+    scale_y_continuous(limits = c(0, y_upper), expand = expansion(mult = c(0, 0.02))) +
     labs(
       title = paste(str_remove(basename(file_name), "\\.csv$"), "Count"),
       x = group_var,
@@ -63,7 +64,7 @@ for (file in csv_files) {
   data <- read_csv(file)
 
   group_var <- names(data)[1]
-  value_var <- names(data)[3]
+  value_var <- names(data)[3] # COUNT COLUMN
 
   # Print data point counts per condition
   cat("Data counts for file:", basename(file), "\n")
@@ -81,10 +82,16 @@ for (file in csv_files) {
 
   other_groups <- setdiff(unique(data[[group_var]]), control_group)
 
-  # Compute max value for annotation positioning
-  y_max <- max(data[[value_var]], na.rm = TRUE)
+  # --- Dynamic y-axis calculation ---
+  y_data_max <- max(data[[value_var]], na.rm = TRUE)
+  # Add ~10% headroom; fall back to 1 if all zeros/NA
+  y_upper <- if (is.finite(y_data_max) && y_data_max > 0) y_data_max * 1.10 else 1
 
-  # Compute p-values for comparisons vs UC
+  # Precompute dynamic label positions near the top
+  top_line    <- y_upper * 0.97
+  second_line <- y_upper * 0.94
+
+  # --- Compute p-values for comparisons vs UC ---
   p_values <- data.frame(Group = character(), p_value = numeric(), color = character(), stringsAsFactors = FALSE)
 
   for (g in other_groups) {
@@ -95,15 +102,15 @@ for (file in csv_files) {
     p_values <- rbind(p_values, data.frame(Group = g, p_value = test$p.value, color = "black"))
   }
 
-  # Position black p-values at top of plot
+  # Position black p-values at dynamic top
   plot_data <- data.frame(
     Group = p_values$Group,
     p_value = p_values$p_value,
-    y_position = 97,
+    y_position = top_line,
     color = p_values$color
   )
 
-  # --- Additional Rescue vs MO comparison ---
+  # --- Additional Rescue vs MO comparison (dynamic position) ---
   # Only in cases where a rescue condition exists (name ends with "Rescue")
   rescue_group <- grep("Rescue$", unique(data[[group_var]]), value = TRUE)
   mo_group <- grep("MO$", unique(data[[group_var]]), value = TRUE)
@@ -114,17 +121,16 @@ for (file in csv_files) {
 
     rescue_mo_test <- wilcox.test(rescue_mo_data[[value_var]] ~ rescue_mo_data[[group_var]])
 
-
     plot_data <- rbind(plot_data, data.frame(
-      Group = rescue_group,
-      p_value = rescue_mo_test$p.value,
-      y_position = 94,
-      color = "red"
+      Group      = rescue_group,
+      p_value    = rescue_mo_test$p.value,
+      y_position = second_line,
+      color      = "red"
     ))
   }
 
   # Create and save plot
-  plot <- create_plot(data, file, plot_data, group_var, value_var)
+  plot <- create_plot(data, file, plot_data, group_var, value_var, y_upper)
 
   # Create base filename without extension
   base_name <- str_replace(basename(file), "\\.csv$", "")
